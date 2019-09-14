@@ -12,12 +12,19 @@ module top;
     logic div_5;
 
     logic [63:0] div_5_model = 63'd0;
-    int in_bit_count=0;
+    int cycle=0;
 
     localparam CLK_PERIOD      = 2;
     localparam CLK_PERIOD_BY_2 = CLK_PERIOD/2;
 
-    localparam NUM_RAND_BITS_TO_SHIFT_IN = 40;
+    // Specify the number of cycles, where a single random bit
+    // is shifted into the LSB position on each cycle
+    int NUM_CYCLES;
+
+    initial begin
+        if($value$plusargs("NUM_CYCLES=%d", NUM_CYCLES) && (NUM_CYCLES != "")) begin end
+        else begin $fatal(0, "Must specify a value for NUM_CYCLES"); end
+    end
 
     // Generate a clock
     initial forever #CLK_PERIOD_BY_2 clk = !clk;
@@ -32,7 +39,7 @@ module top;
 
         $display("========== START VERIFICATION ==========");
 
-        repeat(NUM_RAND_BITS_TO_SHIFT_IN) begin
+        repeat(NUM_CYCLES) begin
             // Drive random value
             @(negedge clk) in_bit = $random;
 
@@ -48,7 +55,7 @@ module top;
             // Shift into register to verify div_5
             @(posedge clk) div_5_model = (div_5_model << 1) | in_bit;
 
-            in_bit_count++;
+            cycle++;
         end
 
         $display("========== END VERIFICATION: TEST PASSED! ==========");
@@ -69,9 +76,9 @@ module top;
         end
 
         if(status == "pass") begin
-            $display(   "PASS: t=%3t ns (in_bit_count=%2d): div_5=%b, div_5_model=%0d%s", $time, in_bit_count, div_5, div_5_model, div_5_string);
+            $display(   "PASS: t=%3t ns (cycle=%2d): div_5=%b, div_5_model=%0d%s", $time, cycle, div_5, div_5_model, div_5_string);
         end else if(status == "fail") begin
-            $fatal  (0, "FAIL: t=%3t ns (in_bit_count=%2d): div_5=%b, div_5_model=%0d"  , $time, in_bit_count, div_5, div_5_model);
+            $fatal  (0, "FAIL: t=%3t ns (cycle=%2d): div_5=%b, div_5_model=%0d"  , $time, cycle, div_5, div_5_model);
         end else begin
             $fatal  (0, "Illegal status");
         end
