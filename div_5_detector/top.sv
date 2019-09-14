@@ -2,6 +2,7 @@
 
 `timescale 1 ns/1 ns
 
+`define MIN_CYCLES  1
 `define MAX_CYCLES 64
 
 module top;
@@ -26,8 +27,8 @@ module top;
 
     initial begin
         if($value$plusargs("NUM_CYCLES=%d", NUM_CYCLES)) begin
-            if((NUM_CYCLES < 1) || (NUM_CYCLES > `MAX_CYCLES)) begin
-                $fatal(0, "NUM_CYCLES must be between 1 and %0d, inclusive", `MAX_CYCLES);
+            if((NUM_CYCLES < `MIN_CYCLES) || (NUM_CYCLES > `MAX_CYCLES)) begin
+                $fatal(0, "NUM_CYCLES must be between %0d and %0d, inclusive", `MIN_CYCLES, `MAX_CYCLES);
             end
         end else begin
             $fatal(0, "Must provide +NUM_CYCLES=<num_cycles_to_simulate> plusarg");
