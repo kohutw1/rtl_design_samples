@@ -2,7 +2,7 @@
 
 Title:  Divisible-by-5 detector
 
-Author: Will Kohut (www.github.com/kohutw1)
+Author: Will Kohut (www.github.com/kohutw1/rtl_design_samples)
 
 Description:
     Detect if n is divisible by 5 after shifting a random bit into the LSB position.
