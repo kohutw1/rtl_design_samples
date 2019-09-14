@@ -9,7 +9,7 @@ module top;
 
     logic in_bit;
 
-    logic div_5;
+    logic div_5_dut;
 
     logic [63:0] div_5_model = 63'd0;
     int cycle=0;
@@ -30,7 +30,7 @@ module top;
     initial forever #CLK_PERIOD_BY_2 clk = !clk;
 
     // Instantiate the DUT
-    div_5_detector dut(.*);
+    div_5_detector dut(.div_5(div_5_dut), .*);
 
     // Drive stimulus into the DUT and compare against model
     initial begin
@@ -45,14 +45,14 @@ module top;
 
             // I'd use an assertion here, but Icarus Verilog doesn't support them yet
             if(((div_5_model % 5) == 0) && dut.first_1_seen) begin
-                if( div_5) begin display_status_msg("pass", div_5);
-                end else   begin display_status_msg("fail", div_5); end
+                if( div_5_dut) begin display_status_msg("pass", div_5_dut);
+                end else       begin display_status_msg("fail", div_5_dut); end
             end else begin
-                if(!div_5) begin display_status_msg("pass", div_5);
-                end else   begin display_status_msg("fail", div_5); end
+                if(!div_5_dut) begin display_status_msg("pass", div_5_dut);
+                end else       begin display_status_msg("fail", div_5_dut); end
             end
 
-            // Shift into register to verify div_5
+            // Shift into register to verify div_5_dut
             @(posedge clk) div_5_model = (div_5_model << 1) | in_bit;
 
             cycle++;
@@ -66,19 +66,19 @@ module top;
     // Dump waves
     initial $dumpvars;
 
-    task display_status_msg(input string status, input logic div_5);
+    task display_status_msg(input string status, input logic div_5_dut);
         string div_5_string;
 
-        if(div_5) begin
+        if(div_5_dut) begin
             div_5_string = " <== Divisible by 5";
         end else begin
             div_5_string = "";
         end
 
         if(status == "pass") begin
-            $display(   "PASS: t=%3t ns (cycle=%2d): div_5=%b, div_5_model=%0d%s", $time, cycle, div_5, div_5_model, div_5_string);
+            $display(   "PASS: cycle=%2d (t=%3t ns): div_5_dut=%b, div_5_model=%0d%s", cycle, $time, div_5_dut, div_5_model, div_5_string);
         end else if(status == "fail") begin
-            $fatal  (0, "FAIL: t=%3t ns (cycle=%2d): div_5=%b, div_5_model=%0d"  , $time, cycle, div_5, div_5_model);
+            $fatal  (0, "FAIL: cycle=%2d (t=%3t ns): div_5_dut=%b, div_5_model=%0d%s", cycle, $time, div_5_dut, div_5_model, div_5_string);
         end else begin
             $fatal  (0, "Illegal status");
         end
