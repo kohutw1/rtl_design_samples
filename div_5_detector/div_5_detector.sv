@@ -1,6 +1,6 @@
 /*
 
-Title:  Divisible-by-5 detector
+Title:  Divisible-by-5 Detector
 
 Author: Will Kohut (www.github.com/kohutw1/rtl_design_samples)
 
