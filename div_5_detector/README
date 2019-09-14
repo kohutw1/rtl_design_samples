@@ -1,4 +1,4 @@
-Description of design is located in header of SystemVerilog design file
+Description of design is located in header of SystemVerilog design file.
 
 Freely available tools required to compile, simulate, and view waveform for this RTL sample:
     Compile and simulate: Icarus Verilog (http://iverilog.icarus.com)
