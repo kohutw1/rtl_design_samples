@@ -2,28 +2,36 @@
 
 `timescale 1 ns/1 ns
 
+`define MAX_CYCLES 64
+
 module top;
+    // Specify local parameters
+    localparam CLK_PERIOD      = 2;
+    localparam CLK_PERIOD_BY_2 = CLK_PERIOD/2;
+
     // Declare DUT I/O
     logic clk = 1'd0;
     logic rst_n = 1'd1;
 
     logic in_bit;
-
     logic div_5_dut;
 
-    logic [63:0] div_5_model = 63'd0;
-    int cycle=0;
+    logic [`MAX_CYCLES-1:0] div_5_model = `MAX_CYCLES'd0;
 
-    localparam CLK_PERIOD      = 2;
-    localparam CLK_PERIOD_BY_2 = CLK_PERIOD/2;
+    int cycle=0;
 
     // Specify the number of cycles, where a single random bit
     // is shifted into the LSB position on each cycle
     int NUM_CYCLES;
 
     initial begin
-        if($value$plusargs("NUM_CYCLES=%d", NUM_CYCLES) && (NUM_CYCLES != "")) begin end
-        else begin $fatal(0, "Must specify a value for NUM_CYCLES"); end
+        if($value$plusargs("NUM_CYCLES=%d", NUM_CYCLES)) begin
+            if((NUM_CYCLES < 1) || (NUM_CYCLES > `MAX_CYCLES)) begin
+                $fatal(0, "NUM_CYCLES must be between 1 and %0d, inclusive", `MAX_CYCLES);
+            end
+        end else begin
+            $fatal(0, "Must provide +NUM_CYCLES=<num_cycles_to_simulate> plusarg");
+        end
     end
 
     // Generate a clock
