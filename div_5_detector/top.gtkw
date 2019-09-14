@@ -1,10 +1,10 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Sat Sep 14 19:33:49 2019
+[*] Sat Sep 14 20:10:27 2019
 [*]
 [dumpfile] "/Users/kohutw/rtl_design_samples/div_5_detector/dump.lx2"
-[dumpfile_mtime] "Sat Sep 14 19:24:06 2019"
-[dumpfile_size] 742
+[dumpfile_mtime] "Sat Sep 14 20:01:19 2019"
+[dumpfile_size] 744
 [savefile] "/Users/kohutw/rtl_design_samples/div_5_detector/top.gtkw"
 [timestart] 0
 [size] 1440 900
@@ -14,7 +14,7 @@
 [sst_width] 193
 [signals_width] 345
 [sst_expanded] 1
-[sst_vpaned_height] 309
+[sst_vpaned_height] 351
 @200
 -top Signals
 @28
@@ -23,12 +23,13 @@ top.rst_n[0]
 @24
 top.NUM_CYCLES[31:0]
 top.cycle[31:0]
-top.div_5_model[63:0]
 @28
 [color] 3
 top.in_bit[0]
 [color] 2
-top.div_5[0]
+top.div_5_dut[0]
+@24
+top.div_5_model[63:0]
 @200
 -
 -dut Signals
@@ -36,13 +37,12 @@ top.div_5[0]
 top.dut.clk[0]
 top.dut.rst_n[0]
 top.dut.first_1_seen[0]
-@24
-top.dut.remainder_current[2:0]
-top.dut.remainder_next[2:0]
-@28
 [color] 3
 top.dut.in_bit[0]
 [color] 2
 top.dut.div_5[0]
+@24
+top.dut.remainder_current[2:0]
+top.dut.remainder_next[2:0]
 [pattern_trace] 1
 [pattern_trace] 0
