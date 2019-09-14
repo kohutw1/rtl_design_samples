@@ -17,6 +17,8 @@ module top;
     localparam CLK_PERIOD      = 2;
     localparam CLK_PERIOD_BY_2 = CLK_PERIOD/2;
 
+    localparam NUM_RAND_BITS_TO_SHIFT_IN = 40;
+
     // Generate a clock
     initial forever #CLK_PERIOD_BY_2 clk = !clk;
 
@@ -30,17 +32,17 @@ module top;
 
         $display("========== START VERIFICATION ==========");
 
-        repeat(50) begin
+        repeat(NUM_RAND_BITS_TO_SHIFT_IN) begin
             // Drive random value
             @(negedge clk) in_bit = $random;
 
             // I'd use an assertion here, but Icarus Verilog doesn't support them yet
             if(((div_5_model % 5) == 0) && dut.first_1_seen) begin
-                if( div_5) begin display_status_msg("pass");
-                end else   begin display_status_msg("fail"); end
+                if( div_5) begin display_status_msg("pass", div_5);
+                end else   begin display_status_msg("fail", div_5); end
             end else begin
-                if(!div_5) begin display_status_msg("pass");
-                end else   begin display_status_msg("fail"); end
+                if(!div_5) begin display_status_msg("pass", div_5);
+                end else   begin display_status_msg("fail", div_5); end
             end
 
             // Shift into register to verify div_5
@@ -57,11 +59,19 @@ module top;
     // Dump waves
     initial $dumpvars;
 
-    task display_status_msg(input string status);
+    task display_status_msg(input string status, input logic div_5);
+        string div_5_string;
+
+        if(div_5) begin
+            div_5_string = " <== Divisible by 5";
+        end else begin
+            div_5_string = "";
+        end
+
         if(status == "pass") begin
-            $display(   "PASS: t=%3t ns (in_bit_count=%2d): div_5=%b, div_5_model=%0d", $time, in_bit_count, div_5, div_5_model);
+            $display(   "PASS: t=%3t ns (in_bit_count=%2d): div_5=%b, div_5_model=%0d%s", $time, in_bit_count, div_5, div_5_model, div_5_string);
         end else if(status == "fail") begin
-            $fatal  (0, "FAIL: t=%3t ns (in_bit_count=%2d): div_5=%b, div_5_model=%0d", $time, in_bit_count, div_5, div_5_model);
+            $fatal  (0, "FAIL: t=%3t ns (in_bit_count=%2d): div_5=%b, div_5_model=%0d"  , $time, in_bit_count, div_5, div_5_model);
         end else begin
             $fatal  (0, "Illegal status");
         end
