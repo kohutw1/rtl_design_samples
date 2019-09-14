@@ -5,7 +5,7 @@ Freely available tools required to compile, simulate, and view waveform for this
     2. View waveform:        GTKWave (http://gtkwave.sourceforge.net)
 
 To compile and simulate:
-    > make
+    > make [NUM_CYCLES=<num_cycles_to_simulate>]
 
 To view waveform:
     > gtkwave top.gtkw
