@@ -1,0 +1,9 @@
+Freely available tools required to compile, simulate, and view waveform for this RTL sample:
+    Compile and simulate: Icarus Verilog
+    View waveform:        GTKWave
+
+To compile and simulate:
+    ./run
+
+To view waveform:
+    gtkwave top.gtkw

@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Sat Sep 14 00:21:48 2019
+[*]
+[dumpfile] "/Users/kohutw/rtl_design_samples/div_5_detector/dump.lx2"
+[dumpfile_mtime] "Sat Sep 14 00:17:40 2019"
+[dumpfile_size] 707
+[savefile] "/Users/kohutw/rtl_design_samples/div_5_detector/top.gtkw"
+[timestart] 1
+[size] 1440 900
+[pos] -1 -24
+*-4.819428 20 20 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[sst_width] 193
+[signals_width] 345
+[sst_expanded] 1
+[sst_vpaned_height] 272
+@200
+-top Signals
+@28
+top.clk[0]
+top.rst_n[0]
+@24
+top.in_bit_count[31:0]
+top.div_5_model[63:0]
+@28
+[color] 3
+top.in_bit[0]
+[color] 2
+top.div_5[0]
+@200
+-
+-dut Signals
+@28
+top.dut.clk[0]
+top.dut.rst_n[0]
+top.dut.first_1_seen[0]
+@24
+top.dut.remainder_current[2:0]
+top.dut.remainder_next[2:0]
+@28
+[color] 3
+top.dut.in_bit[0]
+[color] 2
+top.dut.div_5[0]
+[pattern_trace] 1
+[pattern_trace] 0

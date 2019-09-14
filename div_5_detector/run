@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# TODO: Port these steps to Makefile
+
+# Clean up old VCD dumpfile
+rm -rf dump.lx2
+
+# Compile
+iverilog -g2012 -o top top.sv div_5_detector.sv
+
+# Simulate
+vvp top -lxt2
