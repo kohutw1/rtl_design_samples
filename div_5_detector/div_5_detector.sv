@@ -76,14 +76,14 @@ always @(posedge clk) remainder_current <= !rst_n ? {`WIDTH_REM{1'd0}} : remaind
 // Next state logic
 always @* begin
     case({in_bit, remainder_current})
-        // Shift in 0: remainder_next = remainder_current << 1 | 0 (remainder_next = 2*remainder_current + 0)
+        // Shift in 0: remainder_next = remainder_current << 1 | 0 [remainder_next = (2 * remainder_current) + 0]
         {1'd0, `WIDTH_REM'd0}: remainder_next = `WIDTH_REM'd0;
         {1'd0, `WIDTH_REM'd1}: remainder_next = `WIDTH_REM'd2;
         {1'd0, `WIDTH_REM'd2}: remainder_next = `WIDTH_REM'd4;
         {1'd0, `WIDTH_REM'd3}: remainder_next = `WIDTH_REM'd1;
         {1'd0, `WIDTH_REM'd4}: remainder_next = `WIDTH_REM'd3;
 
-        // Shift in 1: remainder_next = remainder_current << 1 | 1 (remainder_next = 2*remainder_current + 1)
+        // Shift in 1: remainder_next = remainder_current << 1 | 1 [remainder_next = (2 * remainder_current) + 1]
         {1'd1, `WIDTH_REM'd0}: remainder_next = `WIDTH_REM'd1;
         {1'd1, `WIDTH_REM'd1}: remainder_next = `WIDTH_REM'd3;
         {1'd1, `WIDTH_REM'd2}: remainder_next = `WIDTH_REM'd0;
