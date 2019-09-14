@@ -91,6 +91,7 @@ always @* begin
         {1'd1, `WIDTH_REM'd4}: remainder_next = `WIDTH_REM'd4;
 
         // Drive x's to detect cases we don't expect to hit
+        // Would add x assertions to catch this if Icarus Verilog supported them
         default: remainder_next = {`WIDTH_REM{1'bx}};
     endcase
 end
