@@ -2,7 +2,7 @@
 
 Title:  Divisible-by-5 detector
 
-Author: Will Kohut (https://github.com/kohutw1)
+Author: Will Kohut (www.github.com/kohutw1)
 
 Description:
     Detect if n is divisible by 5 after shifting a random bit into the LSB position.
@@ -13,7 +13,7 @@ Description:
     We can detect divisibility by 5 of n by tracking the remainder of each new result.
     The remainder can be calculated as follows:
 
-        remainder_next = 2*remainder_current + in_bit
+        remainder_next = (2 * remainder_current) + in_bit
 
     Whenever the current remainder becomes 0, we know the new result is divisible by 5.
 
@@ -90,6 +90,7 @@ always @* begin
         {1'd1, `WIDTH_REM'd3}: remainder_next = `WIDTH_REM'd2;
         {1'd1, `WIDTH_REM'd4}: remainder_next = `WIDTH_REM'd4;
 
+        // Drive x's to detect cases we don't expect to hit
         default: remainder_next = {`WIDTH_REM{1'bx}};
     endcase
 end
