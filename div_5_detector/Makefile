@@ -6,7 +6,11 @@ SV_SRC :=  \
 
 NUM_CYCLES ?= 40
 
-PLUSARGS := +NUM_CYCLES=$(NUM_CYCLES)
+SEED ?= 0
+
+PLUSARGS := \
+    +SEED=$(SEED) \
+    +NUM_CYCLES=$(NUM_CYCLES)
 
 compile: $(SV_SRC)
 	iverilog -g2012 -o $(TOP_MODULE) $(SV_SRC)

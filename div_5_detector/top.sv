@@ -21,11 +21,16 @@ module top;
 
     int cycle=0;
 
+    // Specify the seed to use for the $random function
+    int SEED;
+
     // Specify the number of cycles, where a single random bit
     // is shifted into the LSB position on each cycle
     int NUM_CYCLES;
 
     initial begin
+        if($value$plusargs("SEED=%d", SEED)) begin end else $fatal(0, "Must provide +SEED=<random_seed> plusarg");
+
         if($value$plusargs("NUM_CYCLES=%d", NUM_CYCLES)) begin
             if((NUM_CYCLES < `MIN_CYCLES) || (NUM_CYCLES > `MAX_CYCLES)) begin
                 $fatal(0, "NUM_CYCLES must be between %0d and %0d, inclusive", `MIN_CYCLES, `MAX_CYCLES);
@@ -50,7 +55,7 @@ module top;
 
         repeat(NUM_CYCLES) begin
             // Drive random value
-            @(negedge clk) in_bit = $random;
+            @(negedge clk) in_bit = $random(SEED);
 
             // I'd use an assertion here, but Icarus Verilog doesn't support them yet
             if(((div_5_model % 5) == 0) && dut.first_1_seen) begin
