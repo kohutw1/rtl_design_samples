@@ -97,6 +97,6 @@ always @* begin
 end
 
 // Moore output
-assign div_5 = (remainder_current == 3'd0) && first_1_seen;
+assign div_5 = (remainder_current == `WIDTH_REM'd0) && first_1_seen;
 
 endmodule : div_5_detector
