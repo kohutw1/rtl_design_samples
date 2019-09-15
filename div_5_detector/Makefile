@@ -12,17 +12,14 @@ PLUSARGS := \
     +SEED=$(SEED) \
     +NUM_CYCLES=$(NUM_CYCLES)
 
-compile: $(SV_SRC)
-	iverilog -g2012 -o $(TOP_MODULE) $(SV_SRC)
-
+# Simulate
 sim: $(TOP_MODULE)
 	vvp $(TOP_MODULE) -lxt2 $(PLUSARGS)
+
+# Compile
+$(TOP_MODULE): $(SV_SRC)
+	iverilog -g2012 -o $(TOP_MODULE) $(SV_SRC)
 
 clean:
 	rm -rf $(TOP_MODULE)
 	rm -rf dump.lx2
-
-all: clean compile sim
-.PHONY: all
-
-.DEFAULT_GOAL := all
