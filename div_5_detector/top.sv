@@ -55,7 +55,7 @@ module top;
 
         repeat(NUM_CYCLES) begin
             // Drive random value
-            @(negedge clk) in_bit = $random(SEED);
+            @(negedge clk) in_bit = $urandom(SEED);
 
             // I'd use an assertion here, but Icarus Verilog doesn't support them yet
             if(((div_5_model % 5) == 0) && dut.first_1_seen) begin
