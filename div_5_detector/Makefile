@@ -6,7 +6,7 @@ SV_SRC :=  \
 
 NUM_CYCLES ?= 40
 
-SEED ?= 0
+SEED ?= 1
 
 PLUSARGS := \
     +SEED=$(SEED) \
