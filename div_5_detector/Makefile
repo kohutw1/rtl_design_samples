@@ -9,8 +9,8 @@ NUM_CYCLES ?= 40
 SEED ?= 1
 
 PLUSARGS := \
-    +SEED=$(SEED) \
-    +NUM_CYCLES=$(NUM_CYCLES)
+	+SEED=$(SEED) \
+	+NUM_CYCLES=$(NUM_CYCLES)
 
 # Simulate
 sim: $(TOP_MODULE)
