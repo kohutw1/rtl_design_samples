@@ -4,9 +4,8 @@ SV_SRC :=  \
 	$(TOP_MODULE).sv \
 	div_5_detector.sv
 
+SEED       ?=  1
 NUM_CYCLES ?= 40
-
-SEED ?= 1
 
 PLUSARGS := \
 	+SEED=$(SEED) \
