@@ -1,0 +1,41 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Thu Sep 19 00:25:23 2019
+[*]
+[dumpfile] "~/rtl_design_samples/fsm/dump.lx2"
+[dumpfile_mtime] "Thu Sep 19 00:24:10 2019"
+[dumpfile_size] 948
+[savefile] "~/rtl_design_samples/fsm/top.gtkw"
+[timestart] 0
+[size] 1440 900
+[pos] -731 -1
+*-4.375367 20 20 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[sst_width] 193
+[signals_width] 241
+[sst_expanded] 1
+[sst_vpaned_height] 560
+@200
+-top Signals
+@24
+top.NUM_CYCLES[31:0]
+top.SEED[31:0]
+@28
+top.clk[0]
+top.outp_dut[0]
+top.reset[0]
+top.x1[0]
+@200
+-
+-dut Signals
+@28
+top.dut.clk[0]
+top.dut.outp[0]
+top.dut.reset[0]
+@24
+top.dut.state_current[1:0]
+top.dut.state_next[1:0]
+@28
+top.dut.x1[0]
+[pattern_trace] 1
+[pattern_trace] 0
