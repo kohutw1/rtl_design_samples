@@ -1,4 +1,4 @@
-// Testbench for fsm module
+// Testbench
 
 `timescale 1 ns/1 ns
 
@@ -61,5 +61,4 @@ module top;
 
     // Dump waves
     initial $dumpvars;
-
 endmodule
