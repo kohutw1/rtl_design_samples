@@ -87,10 +87,10 @@ logic clr_valid_next;
 assign start_hdr_cnt_next = bus_in_valid && bus_in_sop;
 
 always @(posedge clk_host) begin
-    if(!rst_n || (hdr_cyc_cnt == LAST_HDR_B_CYC)) begin
+    if(!rst_n || (bus_in_valid && bus_in_eop)) begin
         hdr_cyc_cnt <= {WIDTH_HDR_CYC_CNT_BITS{1'd0}};
     end else begin
-        if(start_hdr_cnt_next || (hdr_cyc_cnt > {WIDTH_HDR_CYC_CNT_BITS{1'd0}})) begin
+        if((start_hdr_cnt_next || (hdr_cyc_cnt > {WIDTH_HDR_CYC_CNT_BITS{1'd0}})) && (hdr_cyc_cnt != LAST_HDR_B_CYC)) begin
             hdr_cyc_cnt <= hdr_cyc_cnt + 1'd1;
         end else begin
             hdr_cyc_cnt <= hdr_cyc_cnt;

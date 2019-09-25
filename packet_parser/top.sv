@@ -20,25 +20,21 @@ module top;
 
     // Declare DUT I/O
     logic clk_host = 1'd0;
-    logic rst_n = 1'd1;
-
-    logic bus_in_eop = 1'd0;
-    logic bus_in_sop = 1'd0;
+    logic rst_n    = 1'd1;
 
     logic bus_in_valid = 1'd0;
+    logic bus_in_sop = 1'd0;
+    logic bus_in_eop = 1'd0;
 
     logic [`WIDTH_BYTEEN_BITS - 1:0] bus_in_byteen = `WIDTH_BYTEEN_BITS'd0;
-
-    logic [`WIDTH_DATA_BITS - 1:0] bus_in_data = `WIDTH_DATA_BITS'd0;
-
-    logic bus_out_eop;
-    logic bus_out_sop;
+    logic [`WIDTH_DATA_BITS   - 1:0] bus_in_data   = `WIDTH_DATA_BITS  'd0;
 
     logic bus_out_valid;
+    logic bus_out_sop;
+    logic bus_out_eop;
 
     logic [`WIDTH_BYTEEN_BITS - 1:0] bus_out_byteen;
-
-    logic [`WIDTH_DATA_BITS - 1:0] bus_out_data;
+    logic [`WIDTH_DATA_BITS   - 1:0] bus_out_data;
 
     logic [`WIDTH_HDR_A_BITS - 1:0] headerA;
     logic [`WIDTH_HDR_B_BITS - 1:0] headerB;
@@ -73,8 +69,48 @@ module top;
 
     // Drive stimulus into the DUT and compare against model
     initial begin
-        #10 rst_n = 1'd0; // Enter reset
-        #10 rst_n = 1'd1; // Exit reset
+        @(posedge clk_host) rst_n = 1'd0; // Enter reset
+        @(posedge clk_host) rst_n = 1'd1; // Exit reset
+
+        @(posedge clk_host); // Cycle 0
+        bus_in_eop    = 1'd0;
+        bus_in_sop    = 1'd1;
+        bus_in_valid  = 1'd1;
+        bus_in_byteen = 8'hFF;
+        bus_in_data   = 64'hABABABABABABCDCD;
+
+        @(posedge clk_host); // Cycle 1
+        bus_in_eop    = 1'd0;
+        bus_in_sop    = 1'd0;
+        bus_in_valid  = 1'd1;
+        bus_in_byteen = 8'hFF;
+        bus_in_data   = 64'hCDCD111111222222;
+
+        @(posedge clk_host); // Cycle 2
+        bus_in_eop    = 1'd0;
+        bus_in_sop    = 1'd0;
+        bus_in_valid  = 1'd1;
+        bus_in_byteen = 8'hFF;
+        bus_in_data   = 64'h3333333333333333;
+
+        @(posedge clk_host); // Cycle 3
+        bus_in_eop    = 1'd1;
+        bus_in_sop    = 1'd0;
+        bus_in_valid  = 1'd1;
+        bus_in_byteen = 8'hFE;
+        bus_in_data   = 64'h4444444444444400;
+
+        @(posedge clk_host); // Cycle 4
+        bus_in_eop    = 1'd0;
+        bus_in_sop    = 1'd0;
+        bus_in_valid  = 1'd0;
+        bus_in_byteen = 8'h00;
+        bus_in_data   = 64'h0000000000000000;
+
+        @(posedge clk_host);
+        @(posedge clk_host);
+
+        $finish;
 
         $display("========== START VERIFICATION ==========");
 
