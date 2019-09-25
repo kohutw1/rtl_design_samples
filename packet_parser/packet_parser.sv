@@ -79,15 +79,17 @@ logic [WIDTH_DATA_BITS  - 1:0] aligned_data;
 logic [WIDTH_HDR_CYC_CNT_BITS - 1:0] hdr_cyc_cnt;
 
 logic start_hdr_cnt_next;
+logic reset_hdr_cnt_next;
 
 logic set_valid_next;
 logic clr_valid_next;
 
 // Iterate through header cycles
 assign start_hdr_cnt_next = bus_in_valid && bus_in_sop;
+assign reset_hdr_cnt_next = bus_in_valid && bus_in_eop;
 
 always @(posedge clk_host) begin
-    if(!rst_n || (bus_in_valid && bus_in_eop)) begin
+    if(!rst_n || reset_hdr_cnt_next) begin
         hdr_cyc_cnt <= {WIDTH_HDR_CYC_CNT_BITS{1'd0}};
     end else begin
         if((start_hdr_cnt_next || (hdr_cyc_cnt > {WIDTH_HDR_CYC_CNT_BITS{1'd0}})) && (hdr_cyc_cnt != LAST_HDR_B_CYC)) begin
