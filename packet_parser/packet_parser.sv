@@ -1,6 +1,11 @@
-/* TODO:
-    1. Describe module
-    2. Describe synthesis guards
+/*
+
+Title:  Packet Parser
+
+Author: Will Kohut (www.github.com/kohutw1/rtl_design_samples)
+
+Description:
+    TODO
 */
 
 module packet_parser #(

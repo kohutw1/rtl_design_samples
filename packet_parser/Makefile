@@ -4,12 +4,16 @@ SV_SRC :=  \
 	$(TOP_MODULE).sv \
 	packet_parser.sv
 
-SEED       ?=  1
-NUM_CYCLES ?= 40
+SEED                  ?= 1
+NUM_PKTS              ?= 5
+MAX_PKT_SIZE_IN_BYTES ?= 100
+RUN_BRINGUP_PACKET    ?= 0
 
 PLUSARGS := \
 	+SEED=$(SEED) \
-	+NUM_CYCLES=$(NUM_CYCLES)
+	+NUM_PKTS=$(NUM_PKTS) \
+	+MAX_PKT_SIZE_IN_BYTES=$(MAX_PKT_SIZE_IN_BYTES) \
+	+RUN_BRINGUP_PACKET=$(RUN_BRINGUP_PACKET)
 
 # Simulate
 sim: $(TOP_MODULE)

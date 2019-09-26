@@ -1,22 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Thu Sep 26 07:52:29 2019
+[*] Thu Sep 26 14:43:04 2019
 [*]
 [dumpfile] "~/rtl_design_samples/packet_parser/dump.lx2"
-[dumpfile_mtime] "Thu Sep 26 07:48:18 2019"
-[dumpfile_size] 989
+[dumpfile_mtime] "Thu Sep 26 14:37:58 2019"
+[dumpfile_size] 1150
 [savefile] "~/rtl_design_samples/packet_parser/top.gtkw"
-[timestart] 12
+[timestart] 9
 [size] 1440 900
-[pos] -1 -1
-*-1.284839 11 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -24
+*-1.134621 37 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
+[treeopen] top.$ivl_for_loop0.
 [treeopen] top.dut.
 [treeopen] top.dut.genblk2.
 [sst_width] 193
 [signals_width] 193
 [sst_expanded] 1
-[sst_vpaned_height] 225
+[sst_vpaned_height] 291
 @200
 -top Signals
 @28
