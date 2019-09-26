@@ -79,7 +79,7 @@ logic [WIDTH_DATA_BITS  - 1:0] aligned_data;
 logic [WIDTH_HDR_CYC_CNT_BITS - 1:0] hdr_cyc_cnt;
 
 logic start_hdr_cnt_next;
-logic double_cnt_0;
+logic cnt_hdr_0_multiple_times;
 
 logic set_valid_next;
 logic clr_valid_next;
@@ -96,7 +96,7 @@ logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_5;
 // Iterate through header cycles
 assign start_hdr_cnt_next = bus_in_valid && bus_in_sop;
 
-assign double_cnt_0 = (hdr_cyc_cnt == {WIDTH_HDR_CYC_CNT_BITS{1'd0}}) && !start_hdr_cnt_next;
+assign cnt_hdr_0_multiple_times = (hdr_cyc_cnt == {WIDTH_HDR_CYC_CNT_BITS{1'd0}}) && !start_hdr_cnt_next;
 
 always @(posedge clk_host) begin
     if(!rst_n || (hdr_cyc_cnt == HDR_B_CYC_LAST)) begin
@@ -118,9 +118,9 @@ always @(posedge clk_host) begin
     if(!rst_n) begin
         aligned_headerA <= {WIDTH_HDR_A_BITS{1'd0}};
     end else begin
-        if((hdr_cyc_cnt == HDR_A_CYC_LAST) && !double_cnt_0) begin
+        if((hdr_cyc_cnt == HDR_A_CYC_LAST) && !cnt_hdr_0_multiple_times) begin
             aligned_headerA <= icarus_verilog_bug_workaround_0;
-        end else if(SYNTH_GUARD_HDR_A_CYC_LAST_GT_0 && ((hdr_cyc_cnt < HDR_A_CYC_LAST) && !double_cnt_0)) begin
+        end else if(SYNTH_GUARD_HDR_A_CYC_LAST_GT_0 && ((hdr_cyc_cnt < HDR_A_CYC_LAST) && !cnt_hdr_0_multiple_times)) begin
             aligned_headerA <= icarus_verilog_bug_workaround_1;
         end else begin
             aligned_headerA <= aligned_headerA;
@@ -137,11 +137,11 @@ always @(posedge clk_host) begin
     if(!rst_n) begin
         aligned_headerB <= {WIDTH_HDR_B_BITS{1'd0}};
     end else begin
-        if(SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_FIRST) && !double_cnt_0)) begin
+        if(SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_FIRST) && !cnt_hdr_0_multiple_times)) begin
             aligned_headerB <= icarus_verilog_bug_workaround_2;
-        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_FIRST) && !double_cnt_0)) begin
+        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_FIRST) && !cnt_hdr_0_multiple_times)) begin
             aligned_headerB <= icarus_verilog_bug_workaround_3;
-        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_LAST) && !double_cnt_0)) begin
+        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_LAST) && !cnt_hdr_0_multiple_times)) begin
             aligned_headerB <= icarus_verilog_bug_workaround_4;
         end else if(SYNTH_GUARD_HDR_B_CYC_LAST_GT_FIRST_PLUS_1 && ((hdr_cyc_cnt > HDR_B_CYC_FIRST) && (hdr_cyc_cnt < HDR_B_CYC_LAST))) begin
             aligned_headerB <= icarus_verilog_bug_workaround_5;
