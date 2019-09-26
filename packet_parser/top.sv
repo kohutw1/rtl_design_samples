@@ -50,7 +50,7 @@ module top;
     logic [`WIDTH_BITS_PER_BYTE - 1:0] hdrA_rand_byte, hdrB_rand_byte;
 
     logic [`WIDTH_BITS_PER_BYTE - 1:0] byte_data;
-    logic       byte_byteen;
+    logic                              byte_byteen;
 
     // Specify the seed to use for the $random function
     int SEED;
