@@ -21,8 +21,8 @@ module packet_parser #(
     input logic bus_in_sop,
     input logic bus_in_eop,
 
-    input logic [WIDTH_DATA_BYTES - 1:0] bus_in_byteen,
-    input logic [WIDTH_DATA_BITS  - 1:0] bus_in_data,
+    input logic [ WIDTH_DATA_BYTES      - 1:0] bus_in_byteen,
+    input logic [(WIDTH_DATA_BYTES * 8) - 1:0] bus_in_data,
 
     // Outputs
     output logic bus_out_valid,
@@ -30,33 +30,33 @@ module packet_parser #(
     output logic bus_out_sop,
     output logic bus_out_eop,
 
-    output logic [WIDTH_DATA_BYTES - 1:0] bus_out_byteen,
-    output logic [WIDTH_DATA_BITS  - 1:0] bus_out_data,
+    output logic [ WIDTH_DATA_BYTES      - 1:0] bus_out_byteen,
+    output logic [(WIDTH_DATA_BYTES * 8) - 1:0] bus_out_data,
 
-    output logic [WIDTH_HDR_A_BITS - 1:0] headerA,
-    output logic [WIDTH_HDR_B_BITS - 1:0] headerB
+    output logic [(WIDTH_HDR_A_BYTES * 8) - 1:0] headerA,
+    output logic [(WIDTH_HDR_B_BYTES * 8) - 1:0] headerB
 );
 
 localparam WIDTH_DATA_BITS  = WIDTH_DATA_BYTES  * 8;
 localparam WIDTH_HDR_A_BITS = WIDTH_HDR_A_BYTES * 8;
 localparam WIDTH_HDR_B_BITS = WIDTH_HDR_B_BYTES * 8;
 
-localparam LAST_HDR_A_CYC = ((WIDTH_HDR_A_BYTES % WIDTH_DATA_BYTES) == 0) ?
+localparam HDR_A_CYC_LAST = ((WIDTH_HDR_A_BYTES % WIDTH_DATA_BYTES) == 0) ?
                             ((WIDTH_HDR_A_BYTES / WIDTH_DATA_BYTES) - 1) :
                             ( WIDTH_HDR_A_BYTES / WIDTH_DATA_BYTES);
 
-localparam LAST_HDR_B_CYC = (((WIDTH_HDR_A_BYTES + WIDTH_HDR_B_BYTES) % WIDTH_DATA_BYTES) == 0) ?
+localparam HDR_B_CYC_LAST = (((WIDTH_HDR_A_BYTES + WIDTH_HDR_B_BYTES) % WIDTH_DATA_BYTES) == 0) ?
                             (((WIDTH_HDR_A_BYTES + WIDTH_HDR_B_BYTES) / WIDTH_DATA_BYTES) - 1) :
                             ( (WIDTH_HDR_A_BYTES + WIDTH_HDR_B_BYTES) / WIDTH_DATA_BYTES);
 
-localparam SYNTH_GUARD_HDR_A_CYC_LAST_GT_0            = LAST_HDR_A_CYC > 0;
-localparam SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST        = LAST_HDR_B_CYC == FIRST_HDR_B_CYC;
+localparam HDR_B_CYC_FIRST = WIDTH_HDR_A_BYTES / WIDTH_DATA_BYTES;
+
+localparam SYNTH_GUARD_HDR_A_CYC_LAST_GT_0            = HDR_A_CYC_LAST > 0;
+localparam SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST        = HDR_B_CYC_LAST == HDR_B_CYC_FIRST;
 localparam SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST       = !SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST;
-localparam SYNTH_GUARD_HDR_B_CYC_LAST_GT_FIRST_PLUS_1 = LAST_HDR_B_CYC > (FIRST_HDR_B_CYC + 1);
+localparam SYNTH_GUARD_HDR_B_CYC_LAST_GT_FIRST_PLUS_1 = HDR_B_CYC_LAST > (HDR_B_CYC_FIRST + 1);
 
-localparam FIRST_HDR_B_CYC = WIDTH_HDR_A_BYTES / WIDTH_DATA_BYTES;
-
-localparam WIDTH_HDR_CYC_CNT_BITS = (LAST_HDR_B_CYC == 0) ? 1 : $clog2(LAST_HDR_B_CYC + 1);
+localparam WIDTH_HDR_CYC_CNT_BITS = (HDR_B_CYC_LAST == 0) ? 1 : $clog2(HDR_B_CYC_LAST + 1);
 
 localparam HDR_A_FRAC_LSB = ((WIDTH_DATA_BYTES - ( WIDTH_HDR_A_BYTES                      % WIDTH_DATA_BYTES)) % WIDTH_DATA_BYTES) * 8;
 localparam HDR_B_FRAC_LSB = ((WIDTH_DATA_BYTES - ((WIDTH_HDR_A_BYTES + WIDTH_HDR_B_BYTES) % WIDTH_DATA_BYTES)) % WIDTH_DATA_BYTES) * 8;
@@ -67,7 +67,7 @@ localparam WIDTH_HDR_B_FRAC_MIDDLE_BITS = HDR_B_FRAC_MSB - HDR_B_FRAC_LSB + 1;
 localparam WIDTH_HDR_B_FRAC_LOWER_BITS  = HDR_B_FRAC_MSB + 1;
 localparam WIDTH_HDR_B_FRAC_UPPER_BITS  = WIDTH_DATA_BITS - HDR_B_FRAC_LSB;
 
-localparam LAST_HDR_B_CYC_BYTES = (WIDTH_HDR_A_BYTES + WIDTH_HDR_B_BYTES) % WIDTH_DATA_BYTES;
+localparam HDR_B_CYC_LAST_BYTES = (WIDTH_HDR_A_BYTES + WIDTH_HDR_B_BYTES) % WIDTH_DATA_BYTES;
 
 localparam TRIVIAL_BYTEEN_AND_DATA_PASSTHROUGH = HDR_B_FRAC_LSB == 0;
 
@@ -79,20 +79,30 @@ logic [WIDTH_DATA_BITS  - 1:0] aligned_data;
 logic [WIDTH_HDR_CYC_CNT_BITS - 1:0] hdr_cyc_cnt;
 
 logic start_hdr_cnt_next;
-logic reset_hdr_cnt_next;
+logic double_cnt_0;
 
 logic set_valid_next;
 logic clr_valid_next;
 
+logic in_valid_eop;
+
+logic [WIDTH_HDR_A_BITS - 1:0] icarus_verilog_bug_workaround_0;
+logic [WIDTH_HDR_A_BITS - 1:0] icarus_verilog_bug_workaround_1;
+logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_2;
+logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_3;
+logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_4;
+logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_5;
+
 // Iterate through header cycles
 assign start_hdr_cnt_next = bus_in_valid && bus_in_sop;
-assign reset_hdr_cnt_next = bus_in_valid && bus_in_eop;
+
+assign double_cnt_0 = (hdr_cyc_cnt == {WIDTH_HDR_CYC_CNT_BITS{1'd0}}) && !start_hdr_cnt_next;
 
 always @(posedge clk_host) begin
-    if(!rst_n || reset_hdr_cnt_next) begin
+    if(!rst_n || (hdr_cyc_cnt == HDR_B_CYC_LAST)) begin
         hdr_cyc_cnt <= {WIDTH_HDR_CYC_CNT_BITS{1'd0}};
     end else begin
-        if((start_hdr_cnt_next || (hdr_cyc_cnt > {WIDTH_HDR_CYC_CNT_BITS{1'd0}})) && (hdr_cyc_cnt != LAST_HDR_B_CYC)) begin
+        if((start_hdr_cnt_next || (hdr_cyc_cnt > {WIDTH_HDR_CYC_CNT_BITS{1'd0}}))) begin
             hdr_cyc_cnt <= hdr_cyc_cnt + 1'd1;
         end else begin
             hdr_cyc_cnt <= hdr_cyc_cnt;
@@ -100,35 +110,43 @@ always @(posedge clk_host) begin
     end
 end
 
+assign icarus_verilog_bug_workaround_0 = (aligned_headerA << WIDTH_HDR_A_FRAC_BITS) | bus_in_data[WIDTH_DATA_BITS - 1:HDR_A_FRAC_LSB];
+assign icarus_verilog_bug_workaround_1 = (aligned_headerA << WIDTH_DATA_BITS      ) | bus_in_data;
+
 // Align headers
 always @(posedge clk_host) begin
     if(!rst_n) begin
         aligned_headerA <= {WIDTH_HDR_A_BITS{1'd0}};
     end else begin
-        if(hdr_cyc_cnt == LAST_HDR_A_CYC) begin
-            aligned_headerA <= (aligned_headerA << WIDTH_HDR_A_FRAC_BITS) | bus_in_data[WIDTH_DATA_BITS - 1:HDR_A_FRAC_LSB];
-        end else if(SYNTH_GUARD_HDR_A_CYC_LAST_GT_0 && (hdr_cyc_cnt < LAST_HDR_A_CYC)) begin
-            aligned_headerA <= (aligned_headerA << WIDTH_DATA_BITS      ) | bus_in_data;
+        if((hdr_cyc_cnt == HDR_A_CYC_LAST) && !double_cnt_0) begin
+            aligned_headerA <= icarus_verilog_bug_workaround_0;
+        end else if(SYNTH_GUARD_HDR_A_CYC_LAST_GT_0 && ((hdr_cyc_cnt < HDR_A_CYC_LAST) && !double_cnt_0)) begin
+            aligned_headerA <= icarus_verilog_bug_workaround_1;
         end else begin
-            aligned_headerA <=  aligned_headerA;
+            aligned_headerA <= aligned_headerA;
         end
     end
 end
+
+assign icarus_verilog_bug_workaround_2 = (aligned_headerB << WIDTH_HDR_B_FRAC_MIDDLE_BITS) | bus_in_data[HDR_B_FRAC_MSB:HDR_B_FRAC_LSB * SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST];
+assign icarus_verilog_bug_workaround_3 = (aligned_headerB << WIDTH_HDR_B_FRAC_LOWER_BITS ) | bus_in_data[HDR_B_FRAC_MSB:0];
+assign icarus_verilog_bug_workaround_4 = (aligned_headerB << WIDTH_HDR_B_FRAC_UPPER_BITS ) | bus_in_data[WIDTH_DATA_BITS - 1:HDR_B_FRAC_LSB];
+assign icarus_verilog_bug_workaround_5 = (aligned_headerB << WIDTH_DATA_BITS             ) | bus_in_data;
 
 always @(posedge clk_host) begin
     if(!rst_n) begin
         aligned_headerB <= {WIDTH_HDR_B_BITS{1'd0}};
     end else begin
-        if(SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST && ((hdr_cyc_cnt == FIRST_HDR_B_CYC) && (hdr_cyc_cnt == LAST_HDR_B_CYC))) begin
-            aligned_headerB <= (aligned_headerB << WIDTH_HDR_B_FRAC_MIDDLE_BITS) | bus_in_data[HDR_B_FRAC_MSB:HDR_B_FRAC_LSB * SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST];
-        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && (hdr_cyc_cnt == FIRST_HDR_B_CYC)) begin
-            aligned_headerB <= (aligned_headerB << WIDTH_HDR_B_FRAC_LOWER_BITS ) | bus_in_data[HDR_B_FRAC_MSB:0];
-        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && (hdr_cyc_cnt == LAST_HDR_B_CYC)) begin
-            aligned_headerB <= (aligned_headerB << WIDTH_HDR_B_FRAC_UPPER_BITS ) | bus_in_data[WIDTH_DATA_BITS - 1:HDR_B_FRAC_LSB];
-        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_GT_FIRST_PLUS_1 && ((hdr_cyc_cnt > FIRST_HDR_B_CYC) && (hdr_cyc_cnt < LAST_HDR_B_CYC))) begin
-            aligned_headerB <= (aligned_headerB << WIDTH_DATA_BITS             ) | bus_in_data;
+        if(SYNTH_GUARD_HDR_B_CYC_LAST_EQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_FIRST) && !double_cnt_0)) begin
+            aligned_headerB <= icarus_verilog_bug_workaround_2;
+        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_FIRST) && !double_cnt_0)) begin
+            aligned_headerB <= icarus_verilog_bug_workaround_3;
+        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_NEQ_FIRST && ((hdr_cyc_cnt == HDR_B_CYC_LAST) && !double_cnt_0)) begin
+            aligned_headerB <= icarus_verilog_bug_workaround_4;
+        end else if(SYNTH_GUARD_HDR_B_CYC_LAST_GT_FIRST_PLUS_1 && ((hdr_cyc_cnt > HDR_B_CYC_FIRST) && (hdr_cyc_cnt < HDR_B_CYC_LAST))) begin
+            aligned_headerB <= icarus_verilog_bug_workaround_5;
         end else begin
-            aligned_headerB <=  aligned_headerB;
+            aligned_headerB <= aligned_headerB;
         end
     end
 end
@@ -141,18 +159,20 @@ if(TRIVIAL_BYTEEN_AND_DATA_PASSTHROUGH) begin
 end else begin
     align_byteen_and_data #(
         .WIDTH_DATA_BYTES(WIDTH_DATA_BYTES),
-        .LAST_HDR_B_CYC_BYTES(LAST_HDR_B_CYC_BYTES)
+        .HDR_B_CYC_LAST_BYTES(HDR_B_CYC_LAST_BYTES)
     ) align(.*);
 end
 
 // Drive outputs
-assign set_valid_next = hdr_cyc_cnt == LAST_HDR_B_CYC;
+assign set_valid_next = hdr_cyc_cnt == HDR_B_CYC_LAST;
 assign clr_valid_next = bus_out_valid && bus_out_eop;
+
+assign in_valid_eop = bus_in_valid && bus_in_eop;
 
 always @(posedge clk_host) begin
     bus_out_valid <= (!rst_n || clr_valid_next) ? 1'd0 : (set_valid_next || bus_out_valid);
     bus_out_sop   <=  !rst_n                    ? 1'd0 :  set_valid_next;
-    bus_out_eop   <=  !rst_n                    ? 1'd0 : (bus_in_valid && bus_in_eop);
+    bus_out_eop   <=  !rst_n                    ? 1'd0 :  in_valid_eop;
 end
 
 assign headerA        = bus_out_valid ? aligned_headerA : {WIDTH_HDR_A_BITS{1'd0}};
@@ -166,15 +186,13 @@ module align_byteen_and_data_trivial #(
     parameter WIDTH_DATA_BYTES = 8
 ) (
     // Inputs
-    input logic [WIDTH_DATA_BYTES - 1:0] bus_in_byteen,
-    input logic [WIDTH_DATA_BITS  - 1:0] bus_in_data,
+    input logic [ WIDTH_DATA_BYTES      - 1:0] bus_in_byteen,
+    input logic [(WIDTH_DATA_BYTES * 8) - 1:0] bus_in_data,
 
     // Outputs
-    output logic [WIDTH_DATA_BYTES - 1:0] aligned_byteen,
-    output logic [WIDTH_DATA_BITS  - 1:0] aligned_data
+    output logic [ WIDTH_DATA_BYTES      - 1:0] aligned_byteen,
+    output logic [(WIDTH_DATA_BYTES * 8) - 1:0] aligned_data
 );
-
-localparam WIDTH_DATA_BITS = WIDTH_DATA_BYTES * 8;
 
 assign aligned_byteen = bus_in_byteen;
 assign aligned_data   = bus_in_data;
@@ -183,7 +201,7 @@ endmodule
 
 module align_byteen_and_data #(
     parameter WIDTH_DATA_BYTES     = 8,
-    parameter LAST_HDR_B_CYC_BYTES = 1
+    parameter HDR_B_CYC_LAST_BYTES = 1
 ) (
     // Inputs
     input logic clk_host,
@@ -193,26 +211,26 @@ module align_byteen_and_data #(
 
     input logic bus_out_eop,
 
-    input logic [WIDTH_DATA_BYTES - 1:0] bus_in_byteen,
-    input logic [WIDTH_DATA_BITS  - 1:0] bus_in_data,
+    input logic [ WIDTH_DATA_BYTES      - 1:0] bus_in_byteen,
+    input logic [(WIDTH_DATA_BYTES * 8) - 1:0] bus_in_data,
 
     input logic set_valid_next,
 
     // Outputs
-    output logic [WIDTH_DATA_BYTES - 1:0] aligned_byteen,
-    output logic [WIDTH_DATA_BITS  - 1:0] aligned_data
+    output logic [ WIDTH_DATA_BYTES      - 1:0] aligned_byteen,
+    output logic [(WIDTH_DATA_BYTES * 8) - 1:0] aligned_data
 );
 
 localparam WIDTH_DATA_BITS = WIDTH_DATA_BYTES * 8;
 
-localparam WIDTH_LOWER_BYTEEN_BITS = LAST_HDR_B_CYC_BYTES;
-localparam WIDTH_LOWER_DATA_BITS   = LAST_HDR_B_CYC_BYTES * 8;
+localparam WIDTH_LOWER_BYTEEN_BITS = HDR_B_CYC_LAST_BYTES;
+localparam WIDTH_LOWER_DATA_BITS   = HDR_B_CYC_LAST_BYTES * 8;
 
-localparam WIDTH_UPPER_BYTEEN_BITS =  WIDTH_DATA_BYTES - LAST_HDR_B_CYC_BYTES;
-localparam WIDTH_UPPER_DATA_BITS   = (WIDTH_DATA_BYTES - LAST_HDR_B_CYC_BYTES) * 8;
+localparam WIDTH_UPPER_BYTEEN_BITS =  WIDTH_DATA_BYTES - HDR_B_CYC_LAST_BYTES;
+localparam WIDTH_UPPER_DATA_BITS   = (WIDTH_DATA_BYTES - HDR_B_CYC_LAST_BYTES) * 8;
 
-localparam LOWER_BYTEEN_LSB = WIDTH_DATA_BYTES -  LAST_HDR_B_CYC_BYTES;
-localparam LOWER_DATA_LSB   = WIDTH_DATA_BITS  - (LAST_HDR_B_CYC_BYTES * 8);
+localparam LOWER_BYTEEN_LSB = WIDTH_DATA_BYTES -  HDR_B_CYC_LAST_BYTES;
+localparam LOWER_DATA_LSB   = WIDTH_DATA_BITS  - (HDR_B_CYC_LAST_BYTES * 8);
 
 localparam UPPER_BYTEEN_MSB = LOWER_BYTEEN_LSB - 1;
 localparam UPPER_DATA_MSB   = LOWER_DATA_LSB   - 1;
