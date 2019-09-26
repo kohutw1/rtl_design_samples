@@ -1,10 +1,6 @@
 /* TODO:
     1. Describe module
     2. Describe synthesis guards
-    3. Add Icarus Verilog notes: SV interfaces, assertions, always_{ff, comb}, ...
-    4. Add section delimiters
-    5. Clean up any FIXMEs
-    6. Clean up any TODOs
 */
 
 module packet_parser #(
@@ -93,7 +89,9 @@ logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_3;
 logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_4;
 logic [WIDTH_HDR_B_BITS - 1:0] icarus_verilog_bug_workaround_5;
 
+//////////////////////////////////////////////////////////
 // Iterate through header cycles
+//////////////////////////////////////////////////////////
 assign start_hdr_cnt_next = bus_in_valid && bus_in_sop;
 
 assign cnt_hdr_0_multiple_times = (hdr_cyc_cnt == {WIDTH_HDR_CYC_CNT_BITS{1'd0}}) && !start_hdr_cnt_next;
@@ -110,10 +108,12 @@ always @(posedge clk_host) begin
     end
 end
 
+//////////////////////////////////////////////////////////
+// Align headers
+//////////////////////////////////////////////////////////
 assign icarus_verilog_bug_workaround_0 = (aligned_headerA << WIDTH_HDR_A_FRAC_BITS) | bus_in_data[WIDTH_DATA_BITS - 1:HDR_A_FRAC_LSB];
 assign icarus_verilog_bug_workaround_1 = (aligned_headerA << WIDTH_DATA_BITS      ) | bus_in_data;
 
-// Align headers
 always @(posedge clk_host) begin
     if(!rst_n) begin
         aligned_headerA <= {WIDTH_HDR_A_BITS{1'd0}};
@@ -151,7 +151,9 @@ always @(posedge clk_host) begin
     end
 end
 
+//////////////////////////////////////////////////////////
 // Align byteen and data
+//////////////////////////////////////////////////////////
 if(TRIVIAL_BYTEEN_AND_DATA_PASSTHROUGH) begin
     align_byteen_and_data_trivial #(
         .WIDTH_DATA_BYTES(WIDTH_DATA_BYTES)
@@ -163,7 +165,9 @@ end else begin
     ) align(.*);
 end
 
+//////////////////////////////////////////////////////////
 // Drive outputs
+//////////////////////////////////////////////////////////
 assign set_valid_next = hdr_cyc_cnt == HDR_B_CYC_LAST;
 assign clr_valid_next = bus_out_valid && bus_out_eop;
 
@@ -182,6 +186,10 @@ assign bus_out_data   = bus_out_valid ? aligned_data    : {WIDTH_DATA_BITS {1'd0
 
 endmodule
 
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+
 module align_byteen_and_data_trivial #(
     parameter WIDTH_DATA_BYTES = 8
 ) (
@@ -198,6 +206,10 @@ assign aligned_byteen = bus_in_byteen;
 assign aligned_data   = bus_in_data;
 
 endmodule
+
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
 
 module align_byteen_and_data #(
     parameter WIDTH_DATA_BYTES     = 8,
