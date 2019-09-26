@@ -17,12 +17,12 @@
 `define WIDTH_BITS_PER_BYTE                    8
 
 module top;
-    localparam CLK_PERIOD      = 2;
+    localparam CLK_PERIOD      =              2;
     localparam CLK_PERIOD_BY_2 = CLK_PERIOD / 2;
 
     // Declare DUT I/O
-    logic clk_host = 1'd0;
-    logic rst_n    = 1'd1;
+    logic clk_host     = 1'd0;
+    logic rst_n        = 1'd1;
 
     logic bus_in_valid = 1'd0;
     logic bus_in_sop   = 1'd0;
