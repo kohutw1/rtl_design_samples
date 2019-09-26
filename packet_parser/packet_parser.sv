@@ -243,25 +243,20 @@ logic [WIDTH_UPPER_DATA_BITS   - 1:0] upper_data;
 
 logic flop_upper;
 
+logic [WIDTH_UPPER_BYTEEN_BITS - 1:0] icarus_verilog_bug_workaround_6;
+logic [WIDTH_UPPER_DATA_BITS   - 1:0] icarus_verilog_bug_workaround_7;
+
 assign flop_upper = set_valid_next || (bus_out_valid && !bus_out_eop);
 
 assign lower_byteen = (bus_out_valid && bus_out_eop) ? {WIDTH_LOWER_BYTEEN_BITS{1'd0}} : bus_in_byteen[WIDTH_DATA_BYTES - 1:LOWER_BYTEEN_LSB];
 assign lower_data   = (bus_out_valid && bus_out_eop) ? {WIDTH_LOWER_DATA_BITS  {1'd0}} : bus_in_data  [WIDTH_DATA_BITS  - 1:LOWER_DATA_LSB  ];
 
+assign icarus_verilog_bug_workaround_6 = flop_upper ? bus_in_byteen[UPPER_BYTEEN_MSB:0] : upper_byteen;
+assign icarus_verilog_bug_workaround_7 = flop_upper ? bus_in_data  [UPPER_DATA_MSB  :0] : upper_data;
+
 always @(posedge clk_host) begin
-    if(!rst_n) begin
-        upper_byteen <= {WIDTH_UPPER_BYTEEN_BITS{1'd0}};
-        upper_data   <= {WIDTH_UPPER_DATA_BITS  {1'd0}};
-    end else begin
-        // Clock gate to save power
-        if(flop_upper) begin
-            upper_byteen <= bus_in_byteen[UPPER_BYTEEN_MSB:0];
-            upper_data   <= bus_in_data  [UPPER_DATA_MSB  :0];
-        end else begin
-            upper_byteen <= upper_byteen;
-            upper_data   <= upper_data;
-        end
-    end
+    upper_byteen <= !rst_n ? {WIDTH_UPPER_BYTEEN_BITS{1'd0}} : icarus_verilog_bug_workaround_6;
+    upper_data   <= !rst_n ? {WIDTH_UPPER_DATA_BITS  {1'd0}} : icarus_verilog_bug_workaround_7;
 end
 
 assign aligned_byteen = {upper_byteen, lower_byteen};
