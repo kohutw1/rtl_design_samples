@@ -203,7 +203,7 @@ if(TRIVIAL_BYTEEN_AND_DATA_PASSTHROUGH) begin
     ) align(.*);
 end else begin
     align_byteen_and_data #(
-        .WIDTH_DATA_BYTES(WIDTH_DATA_BYTES),
+        .WIDTH_DATA_BYTES    (WIDTH_DATA_BYTES    ),
         .HDR_B_CYC_LAST_BYTES(HDR_B_CYC_LAST_BYTES)
     ) align(.*);
 end

@@ -76,7 +76,7 @@ module top;
 
     // Instantiate the DUT
     packet_parser #(
-        .WIDTH_DATA_BYTES (`WIDTH_DATA_BYTES),
+        .WIDTH_DATA_BYTES (`WIDTH_DATA_BYTES ),
         .WIDTH_HDR_A_BYTES(`WIDTH_HDR_A_BYTES),
         .WIDTH_HDR_B_BYTES(`WIDTH_HDR_B_BYTES)
     ) dut(.*);
