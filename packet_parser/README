@@ -5,7 +5,7 @@ Freely available tools required to compile, simulate, and view waveform for this
     2. View waveform:        GTKWave (http://gtkwave.sourceforge.net)
 
 To compile and simulate:
-    > make [SEED=<random_seed>] [[NUM_PKTS=<num_packets_to_simulate>] [MAX_PKT_SIZE_IN_BYTES=<max_packet_size_in_bytes>] | [RUN_BRINGUP_PKT=<0|1>]]
+    > make [SEED=<random_seed>] [[NUM_PKTS=<num_pkts_to_simulate>] [MAX_PKT_SIZE_IN_BYTES=<max_pkt_size_in_bytes>] | [RUN_BRINGUP_PKT=<0|1>]]
 
 To view waveform:
     > gtkwave top.gtkw
