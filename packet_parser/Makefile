@@ -7,7 +7,7 @@ SV_SRC :=  \
 SEED                  ?= 1
 NUM_PKTS              ?= 5
 MAX_PKT_SIZE_IN_BYTES ?= 100
-RUN_BRINGUP_PKT       ?= 0
+RUN_BRINGUP_PKT       ?= 1
 
 PLUSARGS := \
 	+SEED=$(SEED) \
