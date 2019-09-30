@@ -7,18 +7,22 @@ Author: Will Kohut (www.github.com/kohutw1/rtl_design_samples)
 Description:
     Introduction
 
-    Consider an interface which streams packets of data. The interface is comprised of a 64-bit wide data bus, an 8-bit byte enable vector,
-    valid, start of packet, and end of packet flags. All signals are synchronous to the rising edge of the clock. The start and end of packet
-    flag are high for one clock cycle at the beginning and end of packets, respectively. The valid flag is high for the duration of the packet.
-    The length of the packet can be any number of bytes. The data inside of the packet is contiguous and 64-bit aligned, meaning a packet
-    always start at bit 64 (big endian) and all data words are completely full, except for the last one. The byte enable vector indicates
-    which data is valid in the last word. Possible values for the byte enable are 8'b10000000, 8'b11000000, 8'b11100000, 8'b11110000, etc.
-    Within the packet the byte enable should always be 8'b11111111.
+    Consider an interface which streams packets of data. The interface is comprised of a 64-bit wide
+    data bus, an 8-bit byte enable vector, valid, start of packet, and end of packet flags. All
+    signals are synchronous to the rising edge of the clock. The start and end of packet flag are
+    high for one clock cycle at the beginning and end of packets, respectively. The valid flag is
+    high for the duration of the packet. The length of the packet can be any number of bytes. The
+    data inside of the packet is contiguous and 64-bit aligned, meaning a packet always start at bit
+    64 (big endian) and all data words are completely full, except for the last one. The byte enable
+    vector indicates which data is valid in the last word. Possible values for the byte enable are
+    8'b10000000, 8'b11000000, 8'b11100000, 8'b11110000, etc. Within the packet the byte enable
+    should always be 8'b11111111.
 
     Exercise
 
-    Consider a stream of packets. The packets have several headers at the beginning of the packet. Parse the header fields, remove the headers,
-    and output the remainder of the data realigned. The packet has the following format:
+    Consider a stream of packets. The packets have several headers at the beginning of the packet.
+    Parse the header fields, remove the headers, and output the remainder of the data realigned. The
+    packet has the following format:
 
     Header A: 6 Bytes
     Header B: 4 Bytes
@@ -26,8 +30,11 @@ Description:
     63                              0
     ---------------------------------
     |      Header A      | Header B |
+    ---------------------------------
     | Header B |        Data        |
+    ---------------------------------
     |             Data              |
+    ---------------------------------
     |             ...               |
     ---------------------------------
 
@@ -35,8 +42,8 @@ Description:
 
     Example
 
-    The waveforms in waveforms.png show the expected output for one single input example packet. Your module should be able
-    to parse any number of packets of any size.
+    The waveforms in waveforms.png show the expected output for one single input example packet.
+    Your module should be able to parse any number of packets of any size.
 */
 
 module packet_parser #(
