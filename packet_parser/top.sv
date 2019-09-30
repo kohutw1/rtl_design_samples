@@ -62,13 +62,13 @@ module top;
     int MAX_PKT_SIZE_IN_BYTES;
 
     // Run the bringup packet
-    int RUN_BRINGUP_PACKET;
+    int RUN_BRINGUP_PKT;
 
     initial begin
         if($value$plusargs("SEED=%d",                  SEED                 )) begin end else $fatal(0, "Must provide +SEED=<random_seed> plusarg");
         if($value$plusargs("NUM_PKTS=%d",              NUM_PKTS             )) begin end else $fatal(0, "Must provide +NUM_PKTS=<num_packets_to_simulate> plusarg");
         if($value$plusargs("MAX_PKT_SIZE_IN_BYTES=%d", MAX_PKT_SIZE_IN_BYTES)) begin end else $fatal(0, "Must provide +MAX_PKT_SIZE_IN_BYTES=<max_packet_size_in_bytes> plusarg");
-        if($value$plusargs("RUN_BRINGUP_PACKET=%d",    RUN_BRINGUP_PACKET   )) begin end else $fatal(0, "Must provide +RUN_BRINGUP_PACKET=<0|1> plusarg");
+        if($value$plusargs("RUN_BRINGUP_PKT=%d",       RUN_BRINGUP_PKT      )) begin end else $fatal(0, "Must provide +RUN_BRINGUP_PKT=<0|1> plusarg");
     end
 
     // Generate a clock
@@ -88,7 +88,7 @@ module top;
 
         repeat(2) @(posedge clk_host);
 
-        if(RUN_BRINGUP_PACKET) begin
+        if(RUN_BRINGUP_PKT) begin
             $display("========== RUNNING BRINGUP PACKET ==========");
 
             @(posedge clk_host); // Cycle 0

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Thu Sep 26 14:43:04 2019
+[*] Mon Sep 30 05:30:37 2019
 [*]
-[dumpfile] "~/rtl_design_samples/packet_parser/dump.lx2"
-[dumpfile_mtime] "Thu Sep 26 14:37:58 2019"
-[dumpfile_size] 1150
-[savefile] "~/rtl_design_samples/packet_parser/top.gtkw"
+[dumpfile] "/Users/kohutw/rtl_design_samples/packet_parser/dump.lx2"
+[dumpfile_mtime] "Mon Sep 30 05:27:30 2019"
+[dumpfile_size] 1145
+[savefile] "/Users/kohutw/rtl_design_samples/packet_parser/top.gtkw"
 [timestart] 9
 [size] 1440 900
 [pos] -1 -24
-*-1.134621 37 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-1.134621 9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.$ivl_for_loop0.
 [treeopen] top.dut.
@@ -17,7 +17,7 @@
 [sst_width] 193
 [signals_width] 193
 [sst_expanded] 1
-[sst_vpaned_height] 291
+[sst_vpaned_height] 376
 @200
 -top Signals
 @28
@@ -28,13 +28,20 @@ top.bus_in_valid[0]
 top.bus_in_byteen[7:0]
 top.bus_in_data[63:0]
 @28
+[color] 7
 top.bus_out_eop[0]
+[color] 7
 top.bus_out_sop[0]
+[color] 7
 top.bus_out_valid[0]
 @22
+[color] 7
 top.bus_out_byteen[7:0]
+[color] 7
 top.bus_out_data[63:0]
+[color] 2
 top.headerA[47:0]
+[color] 2
 top.headerB[31:0]
 @28
 top.clk_host[0]
