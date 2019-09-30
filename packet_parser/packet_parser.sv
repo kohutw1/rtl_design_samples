@@ -24,8 +24,8 @@ Description:
     Parse the header fields, remove the headers, and output the remainder of the data realigned. The
     packet has the following format:
 
-    Header A: 6 Bytes
-    Header B: 4 Bytes
+    Header A: 6 bytes
+    Header B: 4 bytes
 
     63                              0
     ---------------------------------
