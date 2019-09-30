@@ -2,10 +2,10 @@
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
 [*] Mon Sep 30 05:30:37 2019
 [*]
-[dumpfile] "/Users/kohutw/rtl_design_samples/packet_parser/dump.lx2"
+[dumpfile] "~/rtl_design_samples/packet_parser/dump.lx2"
 [dumpfile_mtime] "Mon Sep 30 05:27:30 2019"
 [dumpfile_size] 1145
-[savefile] "/Users/kohutw/rtl_design_samples/packet_parser/top.gtkw"
+[savefile] "~/rtl_design_samples/packet_parser/top.gtkw"
 [timestart] 9
 [size] 1440 900
 [pos] -1 -24
