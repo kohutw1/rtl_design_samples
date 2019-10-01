@@ -227,7 +227,7 @@ assign headerB        = bus_out_valid ? aligned_headerB : {WIDTH_HDR_B_BITS{1'd0
 assign bus_out_byteen = bus_out_valid ? aligned_byteen  : {WIDTH_DATA_BYTES{1'd0}};
 assign bus_out_data   = bus_out_valid ? aligned_data    : {WIDTH_DATA_BITS {1'd0}};
 
-endmodule
+endmodule : packet_parser
 
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -248,7 +248,7 @@ module align_byteen_and_data_trivial #(
 assign aligned_byteen = bus_in_byteen;
 assign aligned_data   = bus_in_data;
 
-endmodule
+endmodule : align_byteen_and_data_trivial
 
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
@@ -317,4 +317,4 @@ end
 assign aligned_byteen = {upper_byteen, lower_byteen};
 assign aligned_data   = {upper_data  , lower_data  };
 
-endmodule
+endmodule : align_byteen_and_data

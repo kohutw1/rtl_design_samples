@@ -190,4 +190,4 @@ module top;
 
     // Dump waves
     initial $dumpvars;
-endmodule
+endmodule : top
