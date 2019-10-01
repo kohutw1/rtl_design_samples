@@ -64,6 +64,7 @@ module top;
     // Run the bringup packet
     int RUN_BRINGUP_PKT;
 
+    // Read in plusargs
     initial begin
         if($value$plusargs("SEED=%d",                  SEED                 )) begin end else $fatal(0, "Must provide +SEED=<random_seed> plusarg");
         if($value$plusargs("NUM_PKTS=%d",              NUM_PKTS             )) begin end else $fatal(0, "Must provide +NUM_PKTS=<num_packets_to_simulate> plusarg");
