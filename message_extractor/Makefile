@@ -2,8 +2,8 @@
 # Message Extractor Makefile
 ####################################################################
 
-MIN_MSG_BYTES		?= 8
-MAX_MSG_BYTES		?= 32
+MIN_MSG_BYTES       ?= 8
+MAX_MSG_BYTES       ?= 32
 WIDTH_IN_DATA_BYTES ?= 8
 
 RUN_BRINGUP_PKT ?= 1
@@ -13,7 +13,7 @@ IN_VALID_PROB ?= 100
 SEED ?= 1
 
 ifneq "$(and $(NUM_PKT),$(NUM_MSG_PER_PKT))" ""
-	PLUSARG_NUM_PKT 		:= +NUM_PKT=$(NUM_PKT)
+	PLUSARG_NUM_PKT         := +NUM_PKT=$(NUM_PKT)
 	PLUSARG_NUM_MSG_PER_PKT := +NUM_MSG_PER_PKT=$(NUM_MSG_PER_PKT)
 else ifneq "$(and $(RUN_BRINGUP_PKT))" ""
 	PLUSARG_RUN_BRINGUP_PKT := +RUN_BRINGUP_PKT=$(RUN_BRINGUP_PKT)

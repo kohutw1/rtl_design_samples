@@ -41,99 +41,101 @@ module message_extractor #(
     // Local parameters
     ////////////////////////////////////////////////////////////////////
 
-    localparam BITS_PER_BYTE                   = `BITS_PER_BYTE;
+    localparam BITS_PER_BYTE                   =  `BITS_PER_BYTE;
 
-    localparam WIDTH_IN_DATA_BITS              = `WIDTH_IN_DATA_BITS;
+    localparam WIDTH_IN_DATA_BITS              =  `WIDTH_IN_DATA_BITS;
 
-    localparam WIDTH_MSG_CNT_BYTES             = `WIDTH_MSG_CNT_BYTES;
-    localparam WIDTH_MSG_LEN_BYTES             = `WIDTH_MSG_LEN_BYTES;
+    localparam WIDTH_MSG_CNT_BYTES             =  `WIDTH_MSG_CNT_BYTES;
+    localparam WIDTH_MSG_LEN_BYTES             =  `WIDTH_MSG_LEN_BYTES;
 
-    localparam WIDTH_MSG_CNT_BITS              = WIDTH_MSG_CNT_BYTES * BITS_PER_BYTE;
-    localparam WIDTH_MSG_LEN_BITS              = WIDTH_MSG_LEN_BYTES * BITS_PER_BYTE;
+    localparam WIDTH_MSG_CNT_BITS              =  WIDTH_MSG_CNT_BYTES * BITS_PER_BYTE;
+    localparam WIDTH_MSG_LEN_BITS              =  WIDTH_MSG_LEN_BYTES * BITS_PER_BYTE;
 
-    localparam WIDTH_MSG_LEN_BYTES_HALVED      = WIDTH_MSG_LEN_BYTES / 2;
-    localparam WIDTH_MSG_LEN_BITS_HALVED       = WIDTH_MSG_LEN_BYTES_HALVED * BITS_PER_BYTE;
+    localparam WIDTH_MSG_LEN_BYTES_HALVED      =  WIDTH_MSG_LEN_BYTES / 2;
+    localparam WIDTH_MSG_LEN_BITS_HALVED       =  WIDTH_MSG_LEN_BYTES_HALVED * BITS_PER_BYTE;
 
-    localparam MAX_MSG_CYC                     = `ceil(MAX_MSG_BYTES, WIDTH_IN_DATA_BYTES)
+    localparam MAX_MSG_CYC                     =  `ceil(MAX_MSG_BYTES, WIDTH_IN_DATA_BYTES)
 
-    localparam WIDTH_MSG_LEN_REM_BITS          = `bitwidth_of_val(MAX_MSG_BYTES)
+    localparam WIDTH_MSG_LEN_REM_BITS          =  `bitwidth_of_val(MAX_MSG_BYTES)
 
     // We subtract 1 because the last word in the message never needs to be stored
-    localparam NUM_MSG_BUFFER_WORDS            = MAX_MSG_CYC - 1;
+    localparam NUM_MSG_BUFFER_WORDS            =  MAX_MSG_CYC - 1;
 
-    localparam WIDTH_PTR_BITS                  = `bitwidth_of_cnt(MAX_MSG_CYC)
+    localparam WIDTH_DATA_BUFFER_BITS          =  WIDTH_IN_DATA_BITS * NUM_MSG_BUFFER_WORDS;
 
-    localparam MAX_DOWNSHIFT_BYTES             = WIDTH_IN_DATA_BYTES - 1;
-    localparam MAX_UPSHIFT_NON_TAIL_OUT_BYTES  = WIDTH_IN_DATA_BYTES;
-    localparam MAX_UPSHIFT_TAIL_OUT_BYTES      = WIDTH_IN_DATA_BYTES * 2;
+    localparam WIDTH_PTR_BITS                  =  `bitwidth_of_cnt(MAX_MSG_CYC)
 
-    localparam WIDTH_DOWNSHIFT_BITS            = `bitwidth_of_val(MAX_DOWNSHIFT_BYTES)
-    localparam WIDTH_UPSHIFT_NON_TAIL_OUT_BITS = `bitwidth_of_val(MAX_UPSHIFT_NON_TAIL_OUT_BYTES)
-    localparam WIDTH_UPSHIFT_TAIL_OUT_BITS     = `bitwidth_of_val(MAX_UPSHIFT_TAIL_OUT_BYTES)
+    localparam MAX_DOWNSHIFT_BYTES             =  WIDTH_IN_DATA_BYTES - 1;
+    localparam MAX_UPSHIFT_NON_TAIL_OUT_BYTES  =  WIDTH_IN_DATA_BYTES;
+    localparam MAX_UPSHIFT_TAIL_OUT_BYTES      =  WIDTH_IN_DATA_BYTES * 2;
+
+    localparam WIDTH_DOWNSHIFT_BITS            =  `bitwidth_of_val(MAX_DOWNSHIFT_BYTES)
+    localparam WIDTH_UPSHIFT_NON_TAIL_OUT_BITS =  `bitwidth_of_val(MAX_UPSHIFT_NON_TAIL_OUT_BYTES)
+    localparam WIDTH_UPSHIFT_TAIL_OUT_BITS     =  `bitwidth_of_val(MAX_UPSHIFT_TAIL_OUT_BYTES)
 
     ////////////////////////////////////////////////////////////////////
     // Declarations
     ////////////////////////////////////////////////////////////////////
 
-    logic get_new_msg_len_from_sop,
-          get_new_msg_len_from_straddle_next,
-          get_new_msg_len_from_straddle,
-          get_new_msg_len_from_shift;
+    logic                                         get_new_msg_len_from_sop,
+                                                  get_new_msg_len_from_straddle_next,
+                                                  get_new_msg_len_from_straddle,
+                                                  get_new_msg_len_from_shift;
 
-    logic [WIDTH_MSG_LEN_BITS - 1:0] msg_len_from_sop,
-                                     msg_len_from_straddle,
-                                     msg_len_from_shift;
+    logic [WIDTH_MSG_LEN_BITS - 1:0]              msg_len_from_sop,
+                                                  msg_len_from_straddle,
+                                                  msg_len_from_shift;
 
-    logic [WIDTH_MSG_LEN_REM_BITS - 1:0] msg_len_rem_bytes,
-                                         msg_len_rem_bytes_next;
+    logic [WIDTH_MSG_LEN_REM_BITS - 1:0]          msg_len_rem_bytes,
+                                                  msg_len_rem_bytes_next;
 
-    logic [(WIDTH_IN_DATA_BITS * NUM_MSG_BUFFER_WORDS) - 1:0] data_buffer;
+    logic [WIDTH_DATA_BUFFER_BITS - 1:0]          data_buffer;
 
-    logic [NUM_MSG_BUFFER_WORDS - 1:0] mask_buffer;
+    logic [NUM_MSG_BUFFER_WORDS - 1:0]            mask_buffer;
 
-    logic [WIDTH_MSG_LEN_BITS_HALVED - 1:0] straddle_hi,
-                                            straddle_lo;
+    logic [WIDTH_MSG_LEN_BITS_HALVED - 1:0]       straddle_hi,
+                                                  straddle_lo;
 
-    logic [WIDTH_PTR_BITS - 1:0] head_ptr,
-                                 tail_ptr;
+    logic [WIDTH_PTR_BITS - 1:0]                  head_ptr,
+                                                  tail_ptr;
 
-    logic nothing_to_store,
-          nothing_to_store_next;
+    logic                                         nothing_to_store,
+                                                  nothing_to_store_next;
 
-    logic [WIDTH_DOWNSHIFT_BITS - 1:0] head_in_downshift_bytes_next,
-                                       head_in_downshift_bytes,
-                                       head_in_downshift_bytes_prev;
+    logic [WIDTH_DOWNSHIFT_BITS - 1:0]            head_in_downshift_bytes_next,
+                                                  head_in_downshift_bytes,
+                                                  head_in_downshift_bytes_prev;
 
     logic [WIDTH_UPSHIFT_NON_TAIL_OUT_BITS - 1:0] head_out_upshift_bytes,
                                                   tail_in_upshift_bytes,
                                                   tail_in_upshift_bytes_next;
 
-    logic [WIDTH_UPSHIFT_TAIL_OUT_BITS - 1:0] tail_out_upshift_bytes;
+    logic [WIDTH_UPSHIFT_TAIL_OUT_BITS - 1:0]     tail_out_upshift_bytes;
 
-    logic [WIDTH_IN_DATA_BITS - 1:0] head_out_bitmask,
-                                     tail_out_bitmask;
+    logic [WIDTH_IN_DATA_BITS - 1:0]              head_out_bitmask,
+                                                  tail_out_bitmask;
 
-    logic [MAX_MSG_CYC - 1:0] is_head,
-                              is_head_nowrap,
-                              is_tail;
+    logic [MAX_MSG_CYC - 1:0]                     is_head,
+                                                  is_head_nowrap,
+                                                  is_tail;
 
-    logic [WIDTH_IN_DATA_BYTES - 1:0] head_out_bytemask,
-                                      tail_out_bytemask;
+    logic [WIDTH_IN_DATA_BYTES - 1:0]             head_out_bytemask,
+                                                  tail_out_bytemask;
 
-    logic [WIDTH_IN_DATA_BITS - 1:0] msg_len_from_shift_wide;
+    logic [WIDTH_IN_DATA_BITS - 1:0]              msg_len_from_shift_wide;
 
-    logic [WIDTH_IN_DATA_BITS - 1:0] head_in_data,
-                                     head_in_data_out,
-                                     tail_in_data;
+    logic [WIDTH_IN_DATA_BITS - 1:0]              head_in_data,
+                                                  head_in_data_out,
+                                                  tail_in_data;
 
-    logic [WIDTH_IN_DATA_BITS - 1:0] head_out_data,
-                                     tail_out_data;
+    logic [WIDTH_IN_DATA_BITS - 1:0]              head_out_data,
+                                                  tail_out_data;
 
-    logic last_cyc_in_msg,
-          last_cyc_in_msg_next,
-          last_cyc_in_msg_vld;
+    logic                                         last_cyc_in_msg,
+                                                  last_cyc_in_msg_next,
+                                                  last_cyc_in_msg_vld;
 
-    logic use_head;
+    logic                                         use_head;
 
     ////////////////////////////////////////////////////////////////////
     // Determine how to decrement remaining message length
