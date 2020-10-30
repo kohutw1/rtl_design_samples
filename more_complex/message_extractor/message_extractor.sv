@@ -4,6 +4,9 @@
 //
 // Author:
 //     Will Kohut (kohutw@gmail.com)
+//
+// Description:
+//     See message_extractor.docx
 
 `include "global_defines.svh"
 
