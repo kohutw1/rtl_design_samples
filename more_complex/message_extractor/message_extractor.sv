@@ -12,29 +12,29 @@ module message_extractor #(
     parameter MAX_MSG_BYTES        = 32,
     parameter WIDTH_IN_DATA_BYTES  = 8
 ) (
-    input  logic                               clk,
-    input  logic                               reset_n, // Synchronous, active-low reset
+    input  logic                                  clk,
+    input  logic                                  reset_n, // Synchronous, active-low reset
 
     ////////////////////////////////////////////////////////////////////
     // Inputs
     ////////////////////////////////////////////////////////////////////
 
-    input  logic                               in_valid,
-    input  logic                               in_startofpacket,
-    input  logic                               in_endofpacket,
-    input  logic [`WIDTH_IN_EMPTY_BITS  - 1:0] in_empty,
-    input  logic                               in_error,
-    input  logic [`WIDTH_IN_DATA_BITS   - 1:0] in_data,
+    input  logic                                  in_valid,
+    input  logic                                  in_startofpacket,
+    input  logic                                  in_endofpacket,
+    input  logic [`WIDTH_IN_EMPTY_BITS  - 1:0]    in_empty,
+    input  logic                                  in_error,
+    input  logic [`WIDTH_IN_DATA_BITS   - 1:0]    in_data,
 
-    output logic                               in_ready,
+    output logic                                  in_ready,
 
     ////////////////////////////////////////////////////////////////////
     // Outputs
     ////////////////////////////////////////////////////////////////////
 
-    output logic                               out_valid,
-    output logic [`WIDTH_OUT_DATA_BITS  - 1:0] out_data,
-    output logic [`WIDTH_OUT_DATA_BYTES - 1:0] out_bytemask
+    output logic                                  out_valid,
+    output logic [`WIDTH_OUT_DATA_BITS  - 1:0]    out_data,
+    output logic [`WIDTH_OUT_DATA_BYTES - 1:0]    out_bytemask
 );
 
     ////////////////////////////////////////////////////////////////////
