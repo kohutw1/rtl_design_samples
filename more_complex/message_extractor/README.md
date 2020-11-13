@@ -1,3 +1,5 @@
+[TOC]
+
 # Message Extractor
 
 ![message_extractor_1](images/message_extractor_1.png)
