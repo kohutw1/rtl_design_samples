@@ -1,10 +1,12 @@
 # Message Extractor
 
-This design implements a variable-length message packet parser in SystemVerilog.
+#### ![](C:\cygwin64\home\kohut\rtl_design_samples\more_complex\message_extractor\message_extractor_1.png)
 
+![message_extractor_2](C:\cygwin64\home\kohut\rtl_design_samples\more_complex\message_extractor\message_extractor_2.png)
 
+![message_extractor_3](C:\cygwin64\home\kohut\rtl_design_samples\more_complex\message_extractor\message_extractor_3.png)
 
-#### [Documentation](https://github.com/kohutw1/rtl_design_samples/blob/master/more_complex/message_extractor/message_extractor.pdf)
+![message_extractor_4](C:\cygwin64\home\kohut\rtl_design_samples\more_complex\message_extractor\message_extractor_4.png)
 
 
 
