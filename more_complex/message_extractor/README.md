@@ -4,7 +4,7 @@
 
 [How to run simulation and view waveforms](#how-to-run-simulation-and-view-waveforms)
 
-# Description
+## Description
 
 ![message_extractor_1](images/message_extractor_1.png)
 
@@ -12,7 +12,7 @@
 
 ![message_extractor_3](images/message_extractor_3.png)
 
-# How to run simulation and view waveforms
+## How to run simulation and view waveforms
 
 1. Download and install the free ModelSim-Intel FPGA Starter Edition: www.intel.com/content/www/us/en/software/programmable/quartus-prime/model-sim.html
 2. Prepend ModelSim binary path to system `PATH` environment variable
