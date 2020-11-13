@@ -1,10 +1,10 @@
-# Table of Contents
+# Message Extractor
 
-[Message Extractor](https://github.com/kohutw1/rtl_design_samples/tree/master/more_complex/message_extractor#message-extractor)
+[Description](https://github.com/kohutw1/rtl_design_samples/tree/master/more_complex/message_extractor#description)
 
 [How to run simulation and view waveforms](https://github.com/kohutw1/rtl_design_samples/tree/master/more_complex/message_extractor#how-to-run-simulation-and-view-waveforms)
 
-# Message Extractor
+# Description
 
 ![message_extractor_1](images/message_extractor_1.png)
 
