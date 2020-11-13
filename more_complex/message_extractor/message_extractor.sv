@@ -12,12 +12,12 @@ module message_extractor #(
     parameter MAX_MSG_BYTES        = 32,
     parameter WIDTH_IN_DATA_BYTES  = 8
 ) (
-    input  logic                                  clk,
-    input  logic                                  reset_n, // Synchronous, active-low reset
-
     ////////////////////////////////////////////////////////////////////
     // Inputs
     ////////////////////////////////////////////////////////////////////
+
+    input  logic                                  clk,
+    input  logic                                  reset_n, // Synchronous, active-low reset
 
     input  logic                                  in_valid,
     input  logic                                  in_startofpacket,
