@@ -4,7 +4,7 @@ This design implements a variable-length message packet parser in SystemVerilog.
 
 
 
-![Documentation](message_extractor.pdf)
+![Documentation](https://github.com/kohutw1/rtl_design_samples/blob/master/more_complex/message_extractor/message_extractor.pdf)
 
 
 
