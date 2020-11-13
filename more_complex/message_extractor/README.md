@@ -1,12 +1,12 @@
 # Message Extractor
 
-![message_extractor_1](message_extractor_1.png)
+![message_extractor_1](images/message_extractor_1.png)
 
-![message_extractor_2](message_extractor_2.png)
+![message_extractor_2](images/message_extractor_2.png)
 
-![message_extractor_3](message_extractor_3.png)
+![message_extractor_3](images/message_extractor_3.png)
 
-![message_extractor_4](message_extractor_4.png)
+![message_extractor_4](images/message_extractor_4.png)
 
 # How to run simulation and view waveforms
 
